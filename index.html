@@ -175,6 +175,18 @@ background:repeating-linear-gradient(90deg,var(--teal) 0 4px,transparent 4px 6px
 .acct .no{white-space:nowrap;font-size:clamp(19px,5.6vw,26px);color:var(--coral);margin:4px 0 2px;letter-spacing:-.01em}
 .acct .own{font-size:14.5px;color:var(--sub);margin:0 0 12px}
 .acct .btn{width:100%}
+.acct .btn+.btn{margin-top:8px}
+.btn.toss{background:#0064ff;color:#fff}
+@media(hover:hover){.btn.toss:hover{filter:brightness(1.08)}}
+.banks{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.bk-t{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--ink)}
+.bk-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bk-list button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--pale);color:var(--ink);font:700 14px "Paperlogy",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background-color .15s,transform .15s}
+.bk-list button:before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--c)}
+@media(hover:hover){.bk-list button:hover{background:#fff}}
+.bk-list button:active{transform:translateY(1px)}
+.bk-n{margin:10px 0 0;font-size:12.5px;line-height:1.55;color:var(--sub)}
+
 .baton{position:absolute;right:-18px;top:-24px;width:120px;opacity:.9;rotate:-20deg}
 /* share, desk */
 .share{text-align:center}
@@ -352,6 +364,12 @@ transition:opacity .7s ease,transform 1.1s cubic-bezier(.16,1,.3,1),clip-path 1.
 <div class="no d num">농협 301-0274-1702-91</div>
 <p class="own">예금주 · 학생신앙운동</p>
 <button class="btn c" type="button" id="copyAcct"><svg><use href="#ck"/></svg>계좌번호 복사</button>
+<a class="btn toss" id="tossBtn" href="#give"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>토스로 바로 후원</a>
+<div class="banks">
+<p class="bk-t">계좌를 복사하고 은행 앱 열기</p>
+<div class="bk-list" id="bankList"></div>
+<p class="bk-n">앱이 열리면 계좌번호 칸에 붙여넣기 하세요. 앱이 열리지 않으면 계좌번호는 이미 복사되어 있으니 직접 앱을 열어 주세요.</p>
+</div>
 </div>
 </section>
 
@@ -446,6 +464,33 @@ save.addEventListener('click',()=>{cv.toBlob(b=>{if(!b){show('저장하지 못�
   setTimeout(()=>URL.revokeObjectURL(u),2000);show('QR 이미지를 저장했어요')},'image/png')});
 }
 document.getElementById('copyAcct').addEventListener('click',()=>copy('농협 301-0274-1702-91 학생신앙운동','계좌번호를 복사했어요','301-0274-1702-91 (농협)'));
+
+/* 후원: 토스 송금 화면 바로 열기 + 계좌 복사 후 은행 앱 열기 */
+{
+const ACC='30102741702 91'.replace(/\s/g,''),ACC_TXT='농협 301-0274-1702-91 학생신앙운동';
+const ua=navigator.userAgent,isAnd=/Android/i.test(ua),isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+/* 안드로이드는 패키지 이름으로, 아이폰은 앱 주소(scheme)로 연다. 아이폰 주소를 모르는 앱은 복사 안내만 한다 */
+const BANKS=[
+ {n:'NH농협',c:'#2b9a3f',and:'nh.smart.banking',ios:''},
+ {n:'카카오뱅크',c:'#f7d400',and:'com.kakaobank.channel',ios:'kakaobank://'},
+ {n:'토스',c:'#0064ff',and:'viva.republica.toss',ios:'supertoss://'},
+ {n:'KB국민',c:'#ffbc00',and:'com.kbstar.kbbank',ios:'kbbank://'},
+ {n:'신한',c:'#0046ff',and:'com.shinhan.sbanking',ios:''},
+ {n:'우리',c:'#0067ac',and:'com.wooribank.smart.npib',ios:''}];
+const copyAcc=async()=>{try{await navigator.clipboard.writeText(ACC_TXT);return true}catch(e){return false}};
+const openApp=(and,ios)=>{
+  if(isAnd&&and){location.href=`intent://#Intent;package=${and};S.browser_fallback_url=${encodeURIComponent('https://play.google.com/store/apps/details?id='+and)};end`;return true}
+  if(isIOS&&ios){location.href=ios;return true}
+  return false};
+const list=document.getElementById('bankList');
+list.innerHTML=BANKS.map((b,i)=>`<button type="button" data-i="${i}" style="--c:${b.c}">${b.n}</button>`).join('');
+list.addEventListener('click',async e=>{const btn=e.target.closest('button');if(!btn)return;const b=BANKS[+btn.dataset.i],ok=await copyAcc();
+  const opened=openApp(b.and,b.ios);
+  show(ok?(opened?`계좌번호를 복사했어요. ${b.n} 앱으로 이동합니다`:`계좌번호를 복사했어요. ${b.n} 앱을 열어 붙여넣어 주세요`):'농협 301-0274-1702-91 (학생신앙운동)')});
+document.getElementById('tossBtn').addEventListener('click',async e=>{e.preventDefault();await copyAcc();
+  if(isAnd||isIOS){location.href=`supertoss://send?bank=${encodeURIComponent('농협')}&accountNo=${ACC}`;show('토스 송금 화면으로 이동합니다')}
+  else show('휴대폰에서 눌러 주세요. 계좌번호는 복사해 두었어요')});
+}
 }
 </script>
 </body>

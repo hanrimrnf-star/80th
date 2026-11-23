@@ -56,9 +56,9 @@ h1 small{display:block;font-size:clamp(22px,6.4vw,30px);color:var(--teal);margin
 .cta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:0 20px;border-radius:999px;border:0;font:700 15.5px "Paperlogy",sans-serif;
 text-decoration:none;cursor:pointer;background:var(--blue);color:#fff;transition:transform .15s ease-out,box-shadow .15s ease-out,filter .15s}
-.btn.t{background:var(--teal);color:#fff}.btn.w{background:#fff;color:var(--blue);box-shadow:inset 0 0 0 2px var(--blue)}.btn.c{background:var(--coral);color:#fff}
+.btn.t{background:var(--teal);color:#fff}.btn.w{background:#fff;color:var(--blue);box-shadow:inset 0 0 0 2px var(--blue)}.btn.c{background:var(--coral);color:#fff}.btn.copy{background:#fff;color:var(--deep);box-shadow:inset 0 0 0 1px #1a1a1a}
 .btn svg{width:18px;height:18px}
-@media(hover:hover){.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(18,59,120,.18);filter:brightness(1.05)}.btn.w:hover{box-shadow:inset 0 0 0 2px var(--blue),0 6px 14px rgba(18,59,120,.18)}}
+@media(hover:hover){.btn.copy:hover{background:#f2f6fb;box-shadow:inset 0 0 0 1px #1a1a1a}.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(18,59,120,.18);filter:brightness(1.05)}.btn.w:hover{box-shadow:inset 0 0 0 2px var(--blue),0 6px 14px rgba(18,59,120,.18)}}
 .btn:active{transform:translateY(1px)}
 a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:10px}
 .btn:focus-visible{border-radius:999px}
@@ -171,7 +171,7 @@ background:repeating-linear-gradient(90deg,var(--teal) 0 4px,transparent 4px 6px
 .give .kick{color:#fff}
 .give h2 em{background:linear-gradient(transparent 62%,rgba(255,255,255,.35) 62%)}
 .acct{background:#fff;color:var(--ink);border-radius:16px;padding:16px;margin-top:16px;position:relative}
-.acct small{display:block;font-size:13px;font-weight:700;color:var(--teal)}
+.acct small{display:block;font-size:13px;font-weight:700;color:var(--deep)}
 .acct .no{white-space:nowrap;font-size:clamp(19px,5.6vw,26px);color:var(--coral);margin:4px 0 2px;letter-spacing:-.01em}
 .acct .own{font-size:14.5px;color:var(--sub);margin:0 0 12px}
 .acct .btn{width:100%}
@@ -465,14 +465,14 @@ footer{padding-bottom:40px}
 </section>
 
 <section class="give" id="give">
-<div class="kick"><svg><use href="#lane"/></svg>바통을 이어 주세요</div>
-<h2 class="d">다음 80년을 <em>함께 달려 주세요</em></h2>
+<div class="kick"><svg><use href="#lane"/></svg>함께해 주세요</div>
+<h2 class="d">후원으로 <em>동참해 주세요</em></h2>
 <p>기념대회와 기념사업은 동문과 동역자 여러분의 기도와 후원으로 준비됩니다.</p>
 <div class="acct">
 <small>전국SFC 80주년 기념 공식 후원 계좌</small>
 <div class="no d num">농협 301-0274-1702-91</div>
 <p class="own">예금주 · 학생신앙운동</p>
-<button class="btn c" type="button" id="copyAcct"><svg><use href="#ck"/></svg>계좌번호 복사</button>
+<button class="btn copy" type="button" id="copyAcct"><svg><use href="#ck"/></svg>계좌번호 복사</button>
 <a class="btn toss" id="tossBtn" href="#give"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>토스로 바로 후원</a>
 <div class="banks">
 <p class="bk-t">계좌를 복사하고 은행 앱 열기</p>

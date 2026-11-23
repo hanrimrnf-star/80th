@@ -471,10 +471,12 @@ const ACC='30102741702 91'.replace(/\s/g,''),ACC_TXT='농협 301-0274-1702-91 �
 const ua=navigator.userAgent,isAnd=/Android/i.test(ua),isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 /* 안드로이드는 패키지 이름으로, 아이폰은 앱 주소(scheme)로 연다. 아이폰 주소를 모르는 앱은 복사 안내만 한다 */
 const BANKS=[
- {n:'NH농협',c:'#2b9a3f',and:'nh.smart.banking',ios:''},
+ /* 윗줄: 아이폰·안드로이드 모두 앱이 바로 열림 */
  {n:'카카오뱅크',c:'#f7d400',and:'com.kakaobank.channel',ios:'kakaobank://'},
  {n:'토스',c:'#0064ff',and:'viva.republica.toss',ios:'supertoss://'},
  {n:'KB국민',c:'#ffbc00',and:'com.kbstar.kbbank',ios:'kbbank://'},
+ /* 아랫줄: 아이폰에서는 복사 후 직접 열기 (농협 먼저) */
+ {n:'NH농협',c:'#2b9a3f',and:'nh.smart.banking',ios:''},
  {n:'신한',c:'#0046ff',and:'com.shinhan.sbanking',ios:''},
  {n:'우리',c:'#0067ac',and:'com.wooribank.smart.npib',ios:''}];
 const copyAcc=async()=>{try{await navigator.clipboard.writeText(ACC_TXT);return true}catch(e){return false}};

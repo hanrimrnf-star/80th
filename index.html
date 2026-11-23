@@ -178,6 +178,12 @@ background:repeating-linear-gradient(90deg,var(--teal) 0 4px,transparent 4px 6px
 .baton{position:absolute;right:-18px;top:-24px;width:120px;opacity:.9;rotate:-20deg}
 /* share, desk */
 .share{text-align:center}
+.qrbox{margin:18px auto 0;max-width:300px;padding:18px 16px 16px;border:1px solid var(--line);border-radius:18px;background:var(--pale)}
+.qrbox canvas{display:block;width:100%;max-width:240px;height:auto;margin:0 auto;border-radius:10px;background:#fff;box-shadow:0 8px 20px rgba(18,59,120,.12)}
+.qrhint{font-size:13.5px;color:var(--sub);margin:12px 0 14px;line-height:1.6}
+.qrbox .btn{width:100%}
+.js .qrbox:not([hidden]){animation:qrIn .45s cubic-bezier(.16,1,.3,1)}
+@keyframes qrIn{from{opacity:0;transform:translateY(12px) scale(.97)}}
 .share img{display:block;height:auto;width:72%;max-width:320px;margin:6px auto 18px;border-radius:10px;box-shadow:0 16px 30px rgba(18,59,120,.22);rotate:-2deg}
 .desk{background:var(--deep);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .desk .kick{color:var(--aqua)}
@@ -353,7 +359,12 @@ transition:opacity .7s ease,transform 1.1s cubic-bezier(.16,1,.3,1),clip-path 1.
 <div class="kick" style="justify-content:center"><svg><use href="#lane"/></svg>동문에게, 후배에게</div>
 <h2 class="d">이 소식을 <em>함께 나눠 주세요</em></h2>
 <img src="img/poster.jpg" alt="학생신앙운동 80주년 포스터" width="900" height="1273" loading="lazy">
-<div class="cta"><button class="btn" type="button" id="copy"><svg><use href="#ck"/></svg>페이지 링크 복사</button></div>
+<div class="cta"><button class="btn" type="button" id="copy"><svg><use href="#ck"/></svg>페이지 링크 복사</button><button class="btn w" type="button" id="qrBtn" aria-expanded="false" aria-controls="qrBox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20v1M20 14h1"/></svg>QR코드 만들기</button></div>
+<div class="qrbox" id="qrBox" hidden>
+<canvas id="qrCanvas" width="720" height="860" role="img" aria-label="SFC 80주년 기념행사 페이지로 연결되는 QR코드"></canvas>
+<p class="qrhint">휴대폰 카메라로 비추면 이 페이지가 열립니다.<br>주보나 현수막, 발표 화면에 넣어 쓰세요.</p>
+<button class="btn" type="button" id="qrSave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>QR 이미지 저장</button>
+</div>
 </section>
 
 <section class="desk">
@@ -414,6 +425,26 @@ const t=document.getElementById('toast');
 const show=m=>{t.textContent=m;t.classList.add('on');clearTimeout(show.h);show.h=setTimeout(()=>t.classList.remove('on'),1800)};
 const copy=async(txt,ok,fail)=>{try{await navigator.clipboard.writeText(txt);show(ok)}catch(e){show(fail)}};
 document.getElementById('copy').addEventListener('click',()=>copy(location.href.split('#')[0].split('?')[0],'링크를 복사했어요','주소창의 링크를 길게 눌러 복사해 주세요'));
+
+/* QR코드: 버튼을 누르면 이 페이지 주소로 QR을 만들고, PNG로 저장 */
+{
+const PAGE='https://hanrimrnf-star.github.io/80th/';
+const btn=document.getElementById('qrBtn'),box=document.getElementById('qrBox'),cv=document.getElementById('qrCanvas'),save=document.getElementById('qrSave');
+let ready=false;
+const loadLib=()=>new Promise((ok,no)=>{if(window.qrcode)return ok();const sc=document.createElement('script');sc.src='js/qrcode.min.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
+const draw=async()=>{await loadLib();try{await document.fonts.load('700 40px GmarketSans')}catch(e){}
+  const q=qrcode(0,'M');q.addData(PAGE);q.make();const n=q.getModuleCount(),W=cv.width,pad=60,size=W-pad*2,cell=size/n,c=cv.getContext('2d');
+  c.fillStyle='#fff';c.fillRect(0,0,W,cv.height);c.fillStyle='#123b78';
+  for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))c.fillRect(Math.floor(pad+k*cell),Math.floor(pad+r*cell),Math.ceil(cell),Math.ceil(cell));
+  c.textAlign='center';c.fillStyle='#1a4f9c';c.font='700 40px GmarketSans, sans-serif';c.fillText('학생신앙운동 SFC 80주년',W/2,pad+size+70);
+  c.fillStyle='#566f8e';c.font='500 24px Paperlogy, sans-serif';c.fillText(PAGE.replace('https://',''),W/2,pad+size+112);ready=true};
+btn.addEventListener('click',async()=>{const open=box.hidden;box.hidden=!open;btn.setAttribute('aria-expanded',open);
+  if(open){if(!ready){try{await draw()}catch(e){box.hidden=true;btn.setAttribute('aria-expanded',false);show('QR코드를 만들지 못했어요. 잠시 후 다시 눌러 주세요');return}}
+    box.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'})}});
+save.addEventListener('click',()=>{cv.toBlob(b=>{if(!b){show('저장하지 못했어요. QR 이미지를 길게 눌러 저장해 주세요');return}
+  const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='SFC80주년_QR코드.png';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),2000);show('QR 이미지를 저장했어요')},'image/png')});
+}
 document.getElementById('copyAcct').addEventListener('click',()=>copy('농협 301-0274-1702-91 학생신앙운동','계좌번호를 복사했어요','301-0274-1702-91 (농협)'));
 }
 </script>

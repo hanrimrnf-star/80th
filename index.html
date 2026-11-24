@@ -6,8 +6,8 @@
 <meta name="description" content="학생신앙운동 SFC 80주년 기념행사 · 1947–2027 · Ad fontes, missions come true (본질을 회복하자, 사명을 성취하자)">
 <meta property="og:title" content="학생신앙운동 SFC 80주년 기념행사">
 <meta property="og:description" content="SFC는 빛바랜 추억이 아닙니다. 지금도 살아 역사하는 하나님의 운동입니다. · 1947–2027">
-<meta property="og:image" content="https://hanrimrnf-star.github.io/80th/img/og.jpg">
-<meta property="og:url" content="https://hanrimrnf-star.github.io/80th/">
+<meta property="og:image" content="https://80th.sfc.or.kr/img/og.jpg">
+<meta property="og:url" content="https://80th.sfc.or.kr/">
 <meta property="og:type" content="website">
 <title>학생신앙운동 SFC 80주년 기념행사</title>
 <style>
@@ -569,7 +569,7 @@ document.getElementById('copy').addEventListener('click',()=>copy(location.href.
 /* PC: 후원 영역에 휴대폰 스캔용 QR 그리기 */
 {
 const mq=matchMedia('(min-width:1024px)'),cv=document.getElementById('giveQr');let done=false;
-const paint=()=>{if(done||!mq.matches)return;const go=()=>{const q=qrcode(0,'M');q.addData('https://hanrimrnf-star.github.io/80th/#give');q.make();
+const paint=()=>{if(done||!mq.matches)return;const go=()=>{const q=qrcode(0,'M');q.addData('https://80th.sfc.or.kr/#give');q.make();
   const n=q.getModuleCount(),W=cv.width,pad=24,cell=(W-pad*2)/n,c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,W,W);c.fillStyle='#123b78';
   for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))c.fillRect(Math.floor(pad+k*cell),Math.floor(pad+r*cell),Math.ceil(cell),Math.ceil(cell));done=true};
   if(window.qrcode)go();else{const sc=document.createElement('script');sc.src='js/qrcode.min.js';sc.onload=go;document.head.appendChild(sc)}};
@@ -577,7 +577,7 @@ paint();mq.addEventListener?mq.addEventListener('change',paint):mq.addListener(p
 }
 /* QR코드: 버튼을 누르면 이 페이지 주소로 QR을 만들고, PNG로 저장 */
 {
-const PAGE='https://hanrimrnf-star.github.io/80th/';
+const PAGE='https://80th.sfc.or.kr/';
 const btn=document.getElementById('qrBtn'),box=document.getElementById('qrBox'),cv=document.getElementById('qrCanvas'),save=document.getElementById('qrSave');
 let ready=false;
 const loadLib=()=>new Promise((ok,no)=>{if(window.qrcode)return ok();const sc=document.createElement('script');sc.src='js/qrcode.min.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});

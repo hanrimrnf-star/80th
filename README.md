@@ -4,7 +4,7 @@
 
 SFC 80주년 기념행사를 안내하는 모바일 한 페이지 웹사이트입니다.
 
-- 페이지 주소: https://hanrimrnf-star.github.io/80th/
+- 페이지 주소: https://80th.sfc.or.kr/
 - 내용 출처: SFC 80주년 기념 브로슈어
 
 ## 구성
